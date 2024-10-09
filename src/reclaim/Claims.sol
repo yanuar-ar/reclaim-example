@@ -100,7 +100,7 @@ library Claims {
     /**
      * @dev performs string matching to find fields in context
      */
-    function extractFieldFromContext(string memory data, string memory target) public pure returns (string memory) {
+    function extractFieldFromContext(string memory data, string memory target) internal pure returns (string memory) {
         bytes memory dataBytes = bytes(data);
         bytes memory targetBytes = bytes(target);
 
