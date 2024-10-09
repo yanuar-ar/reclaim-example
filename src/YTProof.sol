@@ -13,27 +13,7 @@ contract YTProof is ERC721 {
     constructor() ERC721("Youtube Proof", "YTP") {}
 
     function mintYT(Reclaim.Proof memory proof) public {
-        Reclaim(reclaimAddress).verifyProof(proof);
-
-        // check if providerHash is valid
-        string memory submittedProviderHash =
-            Claims.extractFieldFromContext(proof.claimInfo.context, '"providerHash":"');
-
-        // compare two strings
-        require(
-            keccak256(abi.encodePacked(submittedProviderHash)) == keccak256(abi.encodePacked(providersHash)),
-            "Invalid ProviderHash"
-        );
-
-        string memory videoId = Claims.extractFieldFromContext(proof.claimInfo.context, '"videoId":"');
-
-        // generate tokenId base on videoId. Convert to Keccak256 -> bytes32 -> uint256
-        uint256 tokenId = uint256(keccak256(abi.encodePacked(videoId)));
-
-        // check if already minted
-        address owner = _ownerOf(tokenId);
-        require(owner == address(0), "Already minted");
-
+        uint256 tokenId = verifyProof(proof);
         _safeMint(msg.sender, tokenId);
     }
 
