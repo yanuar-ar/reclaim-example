@@ -17,5 +17,5 @@ $ forge test
 ### Deploy
 
 ```shell
-$ forge create YTProof --rpc-url <your_rpc_url> --interactive
+$ forge create YTProof --rpc-url <your_rpc_url> --interactive --verify
 ```
