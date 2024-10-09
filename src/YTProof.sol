@@ -32,14 +32,19 @@ contract YTProof is ERC721 {
 
         string memory videoId = Claims.extractFieldFromContext(proof.claimInfo.context, '"channelId":"');
 
-        // generate tokenId base on videoId. Convert to Keccak256 -> bytes32 -> uint256
-        uint256 tokenId = uint256(keccak256(abi.encodePacked(videoId)));
+        // generate videoId to tokenId
+        uint256 tokenId = convertId(videoId);
 
         // check if already minted
         address owner = _ownerOf(tokenId);
         require(owner == address(0), "Already minted");
 
         return tokenId;
+    }
+
+    function convertId(string memory videoId) public pure returns (uint256) {
+        // generate tokenId base on videoId. Convert to Keccak256 -> bytes32 -> uint256
+        return uint256(keccak256(abi.encodePacked(videoId)));
     }
 
     function testExtractFieldFromContext() public pure returns (string memory) {
