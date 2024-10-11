@@ -27,12 +27,15 @@ contract DonationProof is Ownable {
     uint256 public currentTransactionId = 0;
 
     // id product => price in USDC
-    mapping(uint256 => uint256) products;
+    mapping(uint256 => uint256) public products;
 
     // transaction id => transaction
-    mapping(uint256 => Transaction) donations;
+    mapping(uint256 => Transaction) public donations;
 
-    constructor() Ownable(msg.sender) {}
+    constructor() Ownable(msg.sender) {
+        // add sample
+        products[1] = 10;
+    }
 
     function donate(uint256 productId) external {
         uint256 price = products[productId];
@@ -47,6 +50,15 @@ contract DonationProof is Ownable {
             proved: false,
             link: ""
         });
+    }
+
+    function proveDonation(uint256 transactionId, Reclaim.Proof memory proof) external {
+        Transaction storage transaction = donations[transactionId];
+        require(transaction.account != address(0), "Transaction not found");
+        require(transaction.proved == false, "Alreadt proved");
+        require(verifyProof(proof), "Proof is not valid");
+
+        transaction.proved = true;
     }
 
     function verifyProof(Reclaim.Proof memory proof) public view returns (bool) {
